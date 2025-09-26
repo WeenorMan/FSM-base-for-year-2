@@ -11,15 +11,19 @@ namespace Player
     public class PlayerScript : MonoBehaviour
     {
         public Rigidbody2D rb;
-        
+        public PlayerControls playerControls;
 
         // variables holding the different player states
         public IdleState idleState;
         public RunningState runningState;
+        public JumpState jumpState;
 
         public StateMachine sm;
 
-
+        private void Awake()
+        {
+            playerControls = new PlayerControls();
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -30,9 +34,20 @@ namespace Player
             // add new states here
             idleState = new IdleState(this, sm);
             runningState = new RunningState(this, sm);
+            jumpState = new JumpState(this, sm);
 
             // initialise the statemachine with the default state
             sm.Init(idleState);
+        }
+
+        void OnEnable()
+        {
+            playerControls.Enable();
+        }
+
+        void OnDisable()
+        {
+            playerControls.Disable();
         }
 
         // Update is called once per frame
@@ -61,7 +76,7 @@ namespace Player
 
         public void CheckForRun()
         {
-            if (Input.GetKey("r")) // key held down
+            if (playerControls.States.RunningState.triggered)
             {
                 sm.ChangeState(runningState);
                 return;
@@ -78,6 +93,8 @@ namespace Player
             }
 
         }
+
+
 
 
 

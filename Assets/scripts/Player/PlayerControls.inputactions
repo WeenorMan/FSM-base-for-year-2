@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "States",
+            "id": "26656650-9d57-4bdd-b928-7e6d2d6eafff",
+            "actions": [
+                {
+                    "name": "JumpState",
+                    "type": "Button",
+                    "id": "6183801e-e315-495d-88cb-91f9db8c8b7b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RunningState",
+                    "type": "Button",
+                    "id": "4c1473a3-bf29-4953-8175-1c8ec724b644",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "IdleState",
+                    "type": "Button",
+                    "id": "ac6b5739-d382-4f7c-b555-e417fc82574a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6f3c7315-af67-410e-a476-2ef4565e101d",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "JumpState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6f4de0fc-873f-4414-bf10-e1eafc7391cc",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RunningState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4601b874-00d5-4d30-a4d7-43741da02140",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IdleState",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
