@@ -28,10 +28,13 @@ namespace Player
         bool jumpButton;
         bool attackButton;
 
-        [Header("Player Settings")]
+        [Header("General Player Settings")]
         [SerializeField] float speed;
+        [SerializeField] float jumpPower;
 
-
+        [Header("Jump Tuning")]
+        [SerializeField] float fallMultiplier = 2.5f;
+        [SerializeField] float lowJumpMultiplier = 2f;
 
 
         private void Awake()
@@ -79,8 +82,6 @@ namespace Player
 
         }
 
-
-
         void FixedUpdate()
         {
             sm.CurrentState.PhysicsUpdate();
@@ -89,27 +90,31 @@ namespace Player
 
         }
 
-
-
-       
-
         public void HorizInput(InputAction.CallbackContext ctx)
         {
             hInput = ctx.ReadValue<Vector2>().x;
+        }
+
+        public void JumpInput(InputAction.CallbackContext ctx)
+        {
+            if (ctx.performed && RayCollisionCheck(0,0) == true)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+                sm.ChangeState(jumpState);
+                print("player has jumped");
+            }
+
+            if (ctx.canceled && rb.linearVelocity.y > 0)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0 * fallMultiplier - 1 * Time.deltaTime);
+            }
         }
 
 
         public void CheckForIdle()
         {
              sm.ChangeState(idleState);
-
         }
-
-        public bool CheckForJump()
-        {
-            return playerControls.Ground.Jump.triggered;
-        }
-
 
         public bool RayCollisionCheck(float xoffs, float yoffs)
         {

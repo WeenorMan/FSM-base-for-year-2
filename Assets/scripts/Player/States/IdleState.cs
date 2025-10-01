@@ -34,17 +34,6 @@ namespace Player
 
             CheckForRun();
 
-           // if ( player.CheckForRun() == true )
-            {
-                sm.ChangeState(player.runningState);
-            }
-            
-
-            if (player.CheckForJump() == true)
-            {
-                sm.ChangeState(player.jumpState);
-            }
-
         }
 
         public override void PhysicsUpdate()
@@ -57,8 +46,11 @@ namespace Player
             if (player.GetHInput() <= -0.1f || player.GetHInput() >= 0.1f)
             {
                 return true;
+
             }
             return false;
         }
+
+        
     }
 }

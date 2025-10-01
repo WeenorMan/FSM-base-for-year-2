@@ -34,12 +34,10 @@ namespace Player
 
             //check for hitting platform or ground
             Debug.Log("checking for idle");
+            
 
-            if(player.RayCollisionCheck(0, 0) == true )
-            {
-                player.CheckForJump();
-                sm.ChangeState(player.jumpState);
-            }
+            
+
         }
 
         public override void PhysicsUpdate()
