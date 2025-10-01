@@ -89,11 +89,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     ""name"": ""PlayerControls"",
     ""maps"": [
         {
-            ""name"": ""States"",
+            ""name"": ""Ground"",
             ""id"": ""26656650-9d57-4bdd-b928-7e6d2d6eafff"",
             ""actions"": [
                 {
-                    ""name"": ""JumpState"",
+                    ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""6183801e-e315-495d-88cb-91f9db8c8b7b"",
                     ""expectedControlType"": """",
@@ -102,22 +102,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RunningState"",
-                    ""type"": ""Button"",
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
                     ""id"": ""4c1473a3-bf29-4953-8175-1c8ec724b644"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""IdleState"",
-                    ""type"": ""Button"",
-                    ""id"": ""ac6b5739-d382-4f7c-b555-e417fc82574a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -128,29 +119,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""JumpState"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6f4de0fc-873f-4414-bf10-e1eafc7391cc"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""id"": ""011f48ca-f7fe-48b8-9640-09d97c8975e9"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RunningState"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4601b874-00d5-4d30-a4d7-43741da02140"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""IdleState"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -159,16 +139,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // States
-        m_States = asset.FindActionMap("States", throwIfNotFound: true);
-        m_States_JumpState = m_States.FindAction("JumpState", throwIfNotFound: true);
-        m_States_RunningState = m_States.FindAction("RunningState", throwIfNotFound: true);
-        m_States_IdleState = m_States.FindAction("IdleState", throwIfNotFound: true);
+        // Ground
+        m_Ground = asset.FindActionMap("Ground", throwIfNotFound: true);
+        m_Ground_Jump = m_Ground.FindAction("Jump", throwIfNotFound: true);
+        m_Ground_Move = m_Ground.FindAction("Move", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
     {
-        UnityEngine.Debug.Assert(!m_States.enabled, "This will cause a leak and performance issues, PlayerControls.States.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Ground.enabled, "This will cause a leak and performance issues, PlayerControls.Ground.Disable() has not been called.");
     }
 
     /// <summary>
@@ -241,39 +220,34 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // States
-    private readonly InputActionMap m_States;
-    private List<IStatesActions> m_StatesActionsCallbackInterfaces = new List<IStatesActions>();
-    private readonly InputAction m_States_JumpState;
-    private readonly InputAction m_States_RunningState;
-    private readonly InputAction m_States_IdleState;
+    // Ground
+    private readonly InputActionMap m_Ground;
+    private List<IGroundActions> m_GroundActionsCallbackInterfaces = new List<IGroundActions>();
+    private readonly InputAction m_Ground_Jump;
+    private readonly InputAction m_Ground_Move;
     /// <summary>
-    /// Provides access to input actions defined in input action map "States".
+    /// Provides access to input actions defined in input action map "Ground".
     /// </summary>
-    public struct StatesActions
+    public struct GroundActions
     {
         private @PlayerControls m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public StatesActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public GroundActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "States/JumpState".
+        /// Provides access to the underlying input action "Ground/Jump".
         /// </summary>
-        public InputAction @JumpState => m_Wrapper.m_States_JumpState;
+        public InputAction @Jump => m_Wrapper.m_Ground_Jump;
         /// <summary>
-        /// Provides access to the underlying input action "States/RunningState".
+        /// Provides access to the underlying input action "Ground/Move".
         /// </summary>
-        public InputAction @RunningState => m_Wrapper.m_States_RunningState;
-        /// <summary>
-        /// Provides access to the underlying input action "States/IdleState".
-        /// </summary>
-        public InputAction @IdleState => m_Wrapper.m_States_IdleState;
+        public InputAction @Move => m_Wrapper.m_Ground_Move;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_States; }
+        public InputActionMap Get() { return m_Wrapper.m_Ground; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -281,9 +255,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="StatesActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="GroundActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(StatesActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(GroundActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -291,20 +265,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="StatesActions" />
-        public void AddCallbacks(IStatesActions instance)
+        /// <seealso cref="GroundActions" />
+        public void AddCallbacks(IGroundActions instance)
         {
-            if (instance == null || m_Wrapper.m_StatesActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_StatesActionsCallbackInterfaces.Add(instance);
-            @JumpState.started += instance.OnJumpState;
-            @JumpState.performed += instance.OnJumpState;
-            @JumpState.canceled += instance.OnJumpState;
-            @RunningState.started += instance.OnRunningState;
-            @RunningState.performed += instance.OnRunningState;
-            @RunningState.canceled += instance.OnRunningState;
-            @IdleState.started += instance.OnIdleState;
-            @IdleState.performed += instance.OnIdleState;
-            @IdleState.canceled += instance.OnIdleState;
+            if (instance == null || m_Wrapper.m_GroundActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GroundActionsCallbackInterfaces.Add(instance);
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
         }
 
         /// <summary>
@@ -313,27 +284,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="StatesActions" />
-        private void UnregisterCallbacks(IStatesActions instance)
+        /// <seealso cref="GroundActions" />
+        private void UnregisterCallbacks(IGroundActions instance)
         {
-            @JumpState.started -= instance.OnJumpState;
-            @JumpState.performed -= instance.OnJumpState;
-            @JumpState.canceled -= instance.OnJumpState;
-            @RunningState.started -= instance.OnRunningState;
-            @RunningState.performed -= instance.OnRunningState;
-            @RunningState.canceled -= instance.OnRunningState;
-            @IdleState.started -= instance.OnIdleState;
-            @IdleState.performed -= instance.OnIdleState;
-            @IdleState.canceled -= instance.OnIdleState;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="StatesActions.UnregisterCallbacks(IStatesActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GroundActions.UnregisterCallbacks(IGroundActions)" />.
         /// </summary>
-        /// <seealso cref="StatesActions.UnregisterCallbacks(IStatesActions)" />
-        public void RemoveCallbacks(IStatesActions instance)
+        /// <seealso cref="GroundActions.UnregisterCallbacks(IGroundActions)" />
+        public void RemoveCallbacks(IGroundActions instance)
         {
-            if (m_Wrapper.m_StatesActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_GroundActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -343,48 +311,41 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="StatesActions.AddCallbacks(IStatesActions)" />
-        /// <seealso cref="StatesActions.RemoveCallbacks(IStatesActions)" />
-        /// <seealso cref="StatesActions.UnregisterCallbacks(IStatesActions)" />
-        public void SetCallbacks(IStatesActions instance)
+        /// <seealso cref="GroundActions.AddCallbacks(IGroundActions)" />
+        /// <seealso cref="GroundActions.RemoveCallbacks(IGroundActions)" />
+        /// <seealso cref="GroundActions.UnregisterCallbacks(IGroundActions)" />
+        public void SetCallbacks(IGroundActions instance)
         {
-            foreach (var item in m_Wrapper.m_StatesActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_GroundActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_StatesActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_GroundActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="StatesActions" /> instance referencing this action map.
+    /// Provides a new <see cref="GroundActions" /> instance referencing this action map.
     /// </summary>
-    public StatesActions @States => new StatesActions(this);
+    public GroundActions @Ground => new GroundActions(this);
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "States" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Ground" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="StatesActions.AddCallbacks(IStatesActions)" />
-    /// <seealso cref="StatesActions.RemoveCallbacks(IStatesActions)" />
-    public interface IStatesActions
+    /// <seealso cref="GroundActions.AddCallbacks(IGroundActions)" />
+    /// <seealso cref="GroundActions.RemoveCallbacks(IGroundActions)" />
+    public interface IGroundActions
     {
         /// <summary>
-        /// Method invoked when associated input action "JumpState" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnJumpState(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "RunningState" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRunningState(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "IdleState" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnIdleState(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }

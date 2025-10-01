@@ -1,6 +1,7 @@
 
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.InputSystem;
 namespace Player
 {
     public class RunningState : State
@@ -28,7 +29,13 @@ namespace Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            player.CheckForIdle();
+
+            if (!player.playerControls.Ground.Move.triggered)
+            {
+                player.CheckForIdle();
+            }
+
+            
             Debug.Log("checking for idle");
         }
 

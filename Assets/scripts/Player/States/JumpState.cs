@@ -10,6 +10,10 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
+
+            //jump animation start
+
+            // set y velocity to a positive number
         }
 
         public override void Exit()
@@ -25,8 +29,17 @@ namespace Player
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-            player.CheckForIdle();
+            
+            //player.CheckForIdle();
+
+            //check for hitting platform or ground
             Debug.Log("checking for idle");
+
+            if(player.RayCollisionCheck(0, 0) == true )
+            {
+                player.CheckForJump();
+                sm.ChangeState(player.jumpState);
+            }
         }
 
         public override void PhysicsUpdate()

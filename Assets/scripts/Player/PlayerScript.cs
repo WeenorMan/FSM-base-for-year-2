@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.VFX;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -12,6 +13,8 @@ namespace Player
     {
         public Rigidbody2D rb;
         public PlayerControls playerControls;
+        public LayerMask groundLayerMask;
+
 
         // variables holding the different player states
         public IdleState idleState;
@@ -19,6 +22,17 @@ namespace Player
         public JumpState jumpState;
 
         public StateMachine sm;
+        
+        //inputs
+        float hInput;
+        bool jumpButton;
+        bool attackButton;
+
+        [Header("Player Settings")]
+        [SerializeField] float speed;
+
+
+
 
         private void Awake()
         {
@@ -70,28 +84,65 @@ namespace Player
         void FixedUpdate()
         {
             sm.CurrentState.PhysicsUpdate();
+            rb.linearVelocity = new Vector2(hInput * speed, rb.linearVelocity.y);
+
+
         }
 
 
 
-        public void CheckForRun()
-        {
-            if (playerControls.States.RunningState.triggered)
-            {
-                sm.ChangeState(runningState);
-                return;
-            }
+       
 
+        public void HorizInput(InputAction.CallbackContext ctx)
+        {
+            hInput = ctx.ReadValue<Vector2>().x;
         }
 
 
         public void CheckForIdle()
         {
-            if (Input.GetKey("i") ) // key held down
-            {
-                sm.ChangeState(idleState);
-            }
+             sm.ChangeState(idleState);
 
+        }
+
+        public bool CheckForJump()
+        {
+            return playerControls.Ground.Jump.triggered;
+        }
+
+
+        public bool RayCollisionCheck(float xoffs, float yoffs)
+        {
+            float rayLength = 0.5f; // length of raycast
+            bool hitSomething = false;
+
+            // convert x and y offset into a Vector3 
+            Vector3 offset = new Vector3(xoffs, yoffs, 0);
+
+            //cast a ray downward starting at the sprite's position
+            RaycastHit2D hit;
+
+            hit = Physics2D.Raycast(transform.position + offset, Vector2.down, rayLength, groundLayerMask);
+
+            Color hitColor = Color.red;
+
+
+            if (hit.collider != null)
+            {
+                print("Player has collided with Ground layer");
+                hitColor = Color.green;
+                hitSomething = true;
+            }
+            // draw a debug ray to show ray's position
+            // You need to enable gizmos in th e editor to see these
+            Debug.DrawRay(transform.position + offset, Vector2.down * rayLength, hitColor);
+            return hitSomething;
+        }
+
+
+        public float GetHInput()
+        {
+            return hInput;
         }
 
 

@@ -12,11 +12,15 @@ namespace Player
         public override void Enter()
         {
             base.Enter();
+
+            //idle animation start
         }
 
         public override void Exit()
         {
             base.Exit();
+
+            //idle animation stop
         }
 
         public override void HandleInput()
@@ -26,14 +30,35 @@ namespace Player
 
         public override void LogicUpdate()
         {
-            player.CheckForRun();
-            Debug.Log("checking for run");
             base.LogicUpdate();
+
+            CheckForRun();
+
+           // if ( player.CheckForRun() == true )
+            {
+                sm.ChangeState(player.runningState);
+            }
+            
+
+            if (player.CheckForJump() == true)
+            {
+                sm.ChangeState(player.jumpState);
+            }
+
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+        }
+
+        bool CheckForRun()
+        {
+            if (player.GetHInput() <= -0.1f || player.GetHInput() >= 0.1f)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
