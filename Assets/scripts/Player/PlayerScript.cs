@@ -14,6 +14,8 @@ namespace Player
         public Rigidbody2D rb;
         public PlayerControls playerControls;
         public LayerMask groundLayerMask;
+        public Animator anim;
+        public PlayerSO playerData;
 
 
         // variables holding the different player states
@@ -24,17 +26,19 @@ namespace Player
         public StateMachine sm;
         
         //inputs
-        float hInput;
-        bool jumpButton;
-        bool attackButton;
+        public float hInput;
+        public bool jumpButton;
+        public bool attackButton;
 
         [Header("General Player Settings")]
         [SerializeField] float speed;
-        [SerializeField] float jumpPower;
+        public float jumpPower;
+        public int health;
 
         [Header("Jump Tuning")]
-        [SerializeField] float fallMultiplier = 2.5f;
-        [SerializeField] float lowJumpMultiplier = 2f;
+        public float fallMultiplier = 2.5f;
+        public float lowJumpMultiplier = 2f;
+        public float gravityScale = 5f;
 
 
         private void Awake()
@@ -45,8 +49,10 @@ namespace Player
         // Start is called before the first frame update
         void Start()
         {
+            rb.gravityScale = gravityScale;
             rb = GetComponent<Rigidbody2D>();
             sm = gameObject.AddComponent<StateMachine>();
+            anim = GetComponent<Animator>();
 
             // add new states here
             idleState = new IdleState(this, sm);
@@ -71,6 +77,12 @@ namespace Player
         public void Update()
         {
             sm.CurrentState.LogicUpdate();
+
+            if(health != playerData.baseHealth)
+            {
+                health = playerData.baseHealth;
+                print("player health is " + health);
+            }
 
             //output debug info to the canvas
             string s;
@@ -97,18 +109,23 @@ namespace Player
 
         public void JumpInput(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed && RayCollisionCheck(0,0) == true)
+            if (ctx.performed)
             {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
-                sm.ChangeState(jumpState);
-                print("player has jumped");
+                jumpButton = true;
+                print("jump pressed");
+
             }
 
-            if (ctx.canceled && rb.linearVelocity.y > 0)
+            if (ctx.canceled)
             {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0 * fallMultiplier - 1 * Time.deltaTime);
+                jumpButton = false;
+                print("jump released");
+
             }
+
         }
+
+       
 
 
         public void CheckForIdle()

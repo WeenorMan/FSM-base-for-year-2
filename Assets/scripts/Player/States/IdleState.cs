@@ -33,6 +33,7 @@ namespace Player
             base.LogicUpdate();
 
             CheckForRun();
+            CheckForJump();
 
         }
 
@@ -51,6 +52,14 @@ namespace Player
             return false;
         }
 
-        
+        public void CheckForJump()
+        {
+            if (player.jumpButton && player.RayCollisionCheck(0, 0) == true)
+            {
+                sm.ChangeState(player.jumpState);
+            }
+
+
+        }
     }
 }
